@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+}
+
+.controls {
+    margin: 30px auto;
+    text-align: center;
+    font-size: 25px;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.board {
+    margin: auto;
+    width: 320px;
+    border: 1px solid black;
+    font-size: 0;
+}
+
+.cell {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px outset grey;
+    display: inline-block;
+    background: lightgrey;
+}
+
+.cell:hover {
+    background-color: lightblue;
+}
+
+.cell:active {
+    background-color: lightslategrey;
+}
+
+.mine{background-color: red;}
+.blank{background-color: white;}
+.number{background: url(img/numbers_sprite.png)}
+.one{background-position:  162px 0;}
+.two{background-position:  144px 0;}
+.three{background-position: 126px 0;}
+.four{background-position: 108px 0;}
+.five{background-position: 90px 0;}
+.six{background-position: 72px 0;}
+.seven{background-position: 54px 0;}
+.eight{background-position: 36px 0;}
