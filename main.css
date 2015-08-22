@@ -2,11 +2,27 @@ body {
     margin: 0;
 }
 
-.controls {
+.header {
     margin: 30px auto;
     text-align: center;
     font-size: 25px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.info-panel{
+    margin: 20px auto;
+    text-align: center;
+
+}
+
+.timer{
+    display: inline-block;
+    margin: 0 50px;
+}
+
+.mines-counter{
+    display: inline-block;
+    margin: 0 50px;
 }
 
 .board {
@@ -14,6 +30,7 @@ body {
     width: 320px;
     border: 1px solid black;
     font-size: 0;
+    user-select: none;
 }
 
 .cell {
@@ -22,20 +39,20 @@ body {
     height: 18px;
     border: 1px outset grey;
     display: inline-block;
-    background: lightgrey;
 }
 
-.cell:hover {
-    background-color: lightblue;
-}
+/*.cell:hover {*/
+    /*background-color: lightblue;*/
+/*}*/
 
 .cell:active {
     background-color: lightslategrey;
 }
-
-.mine{background-color: red;}
+.unrevealed{background-color: lightgrey;}
 .blank{background-color: white;}
-.number{background: url(img/numbers_sprite.png)}
+.mine{background: url(img/minesweeper_sprite.png) 36px 18px;}
+.flag{background: url(img/minesweeper_sprite.png) 18px 18px;}
+.number{background: url(img/minesweeper_sprite.png)}
 .one{background-position:  162px 0;}
 .two{background-position:  144px 0;}
 .three{background-position: 126px 0;}
