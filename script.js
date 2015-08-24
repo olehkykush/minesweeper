@@ -1,8 +1,18 @@
+/*TODO
+* TODO double-click on number
+* TODO generate board on first click
+* TODO interface (restart game/difficulties/other)
+* TODO game difficulties
+* TODO remaster winning/losing
+* TODO styles*/
+
+
 // Global variables
 var xSize = 16,
     ySize = 16,
     minesCount = 40,
     flagCount = 40,
+    revealedCells = 0,
     time = 0,
     minedCells = [];
 
@@ -152,35 +162,48 @@ function revealCellByClick(cell) {
         case 0:
             if ($(cell).hasClass("unrevealed")) {
                 $(cell).addClass("blank").removeClass("unrevealed");
+                revealedCells++;
                 revealBlankCellSurrounding(cell);
             }
             break;
         case 1:
             $(cell).addClass("number one").removeClass("unrevealed");
+            revealedCells++;
             break;
         case 2:
             $(cell).addClass("number two").removeClass("unrevealed");
+            revealedCells++;
             break;
         case 3:
             $(cell).addClass("number three").removeClass("unrevealed");
+            revealedCells++;
             break;
         case 4:
             $(cell).addClass("number four").removeClass("unrevealed");
+            revealedCells++;
             break;
         case 5:
             $(cell).addClass("number five").removeClass("unrevealed");
+            revealedCells++;
             break;
         case 6:
             $(cell).addClass("number six").removeClass("unrevealed");
+            revealedCells++;
             break;
         case 7:
             $(cell).addClass("number seven").removeClass("unrevealed");
+            revealedCells++;
             break;
         case 8:
             $(cell).addClass("number eight").removeClass("unrevealed");
+            revealedCells++;
             break;
         default:
             break;
+    }
+    if ((xSize*ySize)-revealedCells == minesCount){
+        alert("You won =)");
+        location.reload();
     }
 }
 
