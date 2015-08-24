@@ -32,19 +32,22 @@ function init() {
 
 function generateBoard(xSize, ySize) {
     var board = document.createElement("div");
-    $(board).addClass("board");
+    $(board).addClass("board").one("click", function () {
+        //alert("thats the first click!!!");//TODO
+    });
     $(".minesweeper").append(board);
     for (var y = 0; y < ySize; y++) {
         for (var x = 0; x < xSize; x++) {
             var cell = document.createElement("div");
             $(cell).addClass("cell unrevealed");
-            $(cell).attr("data-y", y);
-            $(cell).attr("data-x", x);
+            $(cell).attr("data-y", y).attr("data-x", x);
             $(cell).on("click", function () {
                 revealCellByClick(this);
             }).on("contextmenu", function () {
                 toggleFlag(this);
                 return false;
+            }).on("dblclick", function () {
+                checkNumberSurrByDblClick(this);
             });
             $(board).append(cell);
         }
@@ -110,43 +113,6 @@ function getCellByCoordinates(y, x) {
     return $("[data-y='" + y + "'][data-x='" + x + "']")[0];
 }
 
-function revealCell(cell) {
-    switch ($(cell).data("mined")) {
-        case -1:
-            $(cell).addClass("mine").removeClass("unrevealed");
-            break;
-        case 0:
-            $(cell).addClass("blank").removeClass("unrevealed");
-            break;
-        case 1:
-            $(cell).addClass("number one").removeClass("unrevealed");
-            break;
-        case 2:
-            $(cell).addClass("number two").removeClass("unrevealed");
-            break;
-        case 3:
-            $(cell).addClass("number three").removeClass("unrevealed");
-            break;
-        case 4:
-            $(cell).addClass("number four").removeClass("unrevealed");
-            break;
-        case 5:
-            $(cell).addClass("number five").removeClass("unrevealed");
-            break;
-        case 6:
-            $(cell).addClass("number six").removeClass("unrevealed");
-            break;
-        case 7:
-            $(cell).addClass("number seven").removeClass("unrevealed");
-            break;
-        case 8:
-            $(cell).addClass("number eight").removeClass("unrevealed");
-            break;
-        default:
-            break;
-    }
-}
-
 function revealCellByClick(cell) {
     if ($(cell).hasClass("flag") || !($(cell).hasClass("unrevealed"))){
         return 0;
@@ -210,13 +176,11 @@ function revealCellByClick(cell) {
 function revealBlankCellSurrounding(cell) {
     var y = parseInt($(cell).attr("data-y")),
         x = parseInt($(cell).attr("data-x")),
-        delta = [-1, 0, 1],
-        index = 0;
+        delta = [-1, 0, 1];
     for (var i = 0; i < delta.length; i++) {
         for (var j = 0; j < delta.length; j++) {
             if (delta[i] == 0 && delta[j] == 0) continue;
             revealCellByClick(getCellByCoordinates(y + delta[i], x + delta[j]));
-            index++;
         }
     }
 }
@@ -225,12 +189,6 @@ function showMines() {
     minedCells.forEach(function (item) {
         $(item).addClass("mine").removeClass("unrevealed");
     })
-}
-function revealAll() {
-    var cells = $(".cell");
-    for (var i = 0; i < cells.length; i++) {
-        revealCell(cells[i]);
-    }
 }
 
 function toggleFlag(cell) {
@@ -246,13 +204,88 @@ function toggleFlag(cell) {
         }
     }
 }
-
 function refreshFlagCount() {
     $(".mines-counter span").html(flagCount);
+}
+
+function checkNumberSurrByDblClick(cell){
+    if ($(cell).hasClass("number")){
+        var y = parseInt($(cell).attr("data-y")),
+            x = parseInt($(cell).attr("data-x")),
+            flagCount = 0,
+            surrounding = [],
+            delta = [-1, 0, 1],
+            index = 0;
+        for (var i = 0; i < delta.length; i++) {
+            for (var j = 0; j < delta.length; j++) {
+                if (delta[i] == 0 && delta[j] == 0) continue;
+                surrounding[index] = getCellByCoordinates(y + delta[i], x + delta[j]);
+                index++;
+            }
+        }
+        for (var n = 0; n < surrounding.length; n++) {
+            if ($(surrounding[n]).hasClass("flag")) {
+                flagCount++;
+            }
+        }
+        if (flagCount == $(cell).data("mined")){
+            revealBlankCellSurrounding(cell);
+        }
+
+    }
 }
 
 function updateTimer(){
     setInterval(function(){
         $(".timer span").html(time++);
     }, 1000);
+}
+
+
+
+
+
+
+function revealAll() {
+    var cells = $(".cell");
+    for (var i = 0; i < cells.length; i++) {
+        revealCell(cells[i]);
+    }
+}
+
+function revealCell(cell) {
+    switch ($(cell).data("mined")) {
+        case -1:
+            $(cell).addClass("mine").removeClass("unrevealed");
+            break;
+        case 0:
+            $(cell).addClass("blank").removeClass("unrevealed");
+            break;
+        case 1:
+            $(cell).addClass("number one").removeClass("unrevealed");
+            break;
+        case 2:
+            $(cell).addClass("number two").removeClass("unrevealed");
+            break;
+        case 3:
+            $(cell).addClass("number three").removeClass("unrevealed");
+            break;
+        case 4:
+            $(cell).addClass("number four").removeClass("unrevealed");
+            break;
+        case 5:
+            $(cell).addClass("number five").removeClass("unrevealed");
+            break;
+        case 6:
+            $(cell).addClass("number six").removeClass("unrevealed");
+            break;
+        case 7:
+            $(cell).addClass("number seven").removeClass("unrevealed");
+            break;
+        case 8:
+            $(cell).addClass("number eight").removeClass("unrevealed");
+            break;
+        default:
+            break;
+    }
 }
