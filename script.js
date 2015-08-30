@@ -1,10 +1,8 @@
 /*TODO
-* TODO double-click on number
-* TODO generate board on first click
-* TODO interface (restart game/difficulties/other)
-* TODO game difficulties
-* TODO remaster winning/losing
-* TODO styles*/
+ * TODO interface (restart game/difficulties/other)
+ * TODO game difficulties
+ * TODO redo winning/losing
+ * TODO styles*/
 
 
 // Global variables
@@ -22,57 +20,53 @@ $(document).ready(function () {
 
 function init() {
     generateBoard(xSize, ySize);
-    minedCells = seedMines(xSize, ySize, minesCount);
-    renderNumbers();
     refreshFlagCount();
     updateTimer();
-    //revealAll();
-    //showMines();
+}
+
+function renderBoard() {
+    minedCells = seedMines(xSize, ySize, minesCount, this);
+    renderNumbers();
+    $(".cell").unbind("click", renderBoard);
 }
 
 function generateBoard(xSize, ySize) {
     var board = document.createElement("div");
-    $(board).addClass("board").one("click", function () {
-        //alert("thats the first click!!!");//TODO
-    });
+    $(board).addClass("board");
     $(".minesweeper").append(board);
     for (var y = 0; y < ySize; y++) {
         for (var x = 0; x < xSize; x++) {
             var cell = document.createElement("div");
             $(cell).addClass("cell unrevealed");
             $(cell).attr("data-y", y).attr("data-x", x);
-            $(cell).on("click", function () {
-                revealCellByClick(this);
-            }).on("contextmenu", function () {
-                toggleFlag(this);
-                return false;
-            }).on("dblclick", function () {
-                checkNumberSurrByDblClick(this);
-            });
+            $(cell).on("click", renderBoard)
+                .on("click", function () {
+                    revealCellByClick(this);
+                }).on("contextmenu", function () {
+                    toggleFlag(this);
+                    return false;
+                }).on("dblclick", function () {
+                    checkNumberSurrByDblClick(this);
+                });
             $(board).append(cell);
         }
     }
 }
 
-function seedMines(xSize, ySize, minesCount) {
-    var mineCollection = [];
-    var i = 0;
+function seedMines(xSize, ySize, minesCount, firstCell) {
+    var mineCollection = [],
+        i = 0;
     while (i != minesCount) {
-        var duplicate = false;
-        var yCoord = Math.floor(Math.random() * ySize);
-        var xCoord = Math.floor(Math.random() * xSize);
-        var minedCell = getCellByCoordinates(yCoord, xCoord);
+        var duplicate = false,
+            yCoord = Math.floor(Math.random() * ySize),
+            xCoord = Math.floor(Math.random() * xSize),
+            newMinedCell = getCellByCoordinates(yCoord, xCoord);
         mineCollection.forEach(function (item) {
-            if ($(item).attr("data-y") == yCoord &&
-                $(item).attr("data-x") == xCoord) {
-                duplicate = true; //mine already exist in this cell
-                //console.log("DUBLICATE!!!!!!!!! x: " + xCoord + " y: " + yCoord);
-            }
+            if (item == newMinedCell) duplicate = true;
         });
-        if (duplicate) continue;
-        $(minedCell).data("mined", -1);
-        mineCollection.push(minedCell);
-        //console.log(i + "- x:" + xCoord + " " + "y:" + yCoord + " pushed!");
+        if ((newMinedCell == firstCell) || duplicate) continue;
+        $(newMinedCell).data("mined", -1);
+        mineCollection.push(newMinedCell);
         i++;
     }
     return mineCollection;
@@ -114,7 +108,7 @@ function getCellByCoordinates(y, x) {
 }
 
 function revealCellByClick(cell) {
-    if ($(cell).hasClass("flag") || !($(cell).hasClass("unrevealed"))){
+    if ($(cell).hasClass("flag") || !($(cell).hasClass("unrevealed"))) {
         return 0;
     }
     switch ($(cell).data("mined")) {
@@ -129,7 +123,7 @@ function revealCellByClick(cell) {
             if ($(cell).hasClass("unrevealed")) {
                 $(cell).addClass("blank").removeClass("unrevealed");
                 revealedCells++;
-                revealBlankCellSurrounding(cell);
+                revealCellSurrounding(cell);
             }
             break;
         case 1:
@@ -167,13 +161,13 @@ function revealCellByClick(cell) {
         default:
             break;
     }
-    if ((xSize*ySize)-revealedCells == minesCount){
+    if ((xSize * ySize) - revealedCells == minesCount) {
         alert("You won =)");
         location.reload();
     }
 }
 
-function revealBlankCellSurrounding(cell) {
+function revealCellSurrounding(cell) {
     var y = parseInt($(cell).attr("data-y")),
         x = parseInt($(cell).attr("data-x")),
         delta = [-1, 0, 1];
@@ -208,8 +202,8 @@ function refreshFlagCount() {
     $(".mines-counter span").html(flagCount);
 }
 
-function checkNumberSurrByDblClick(cell){
-    if ($(cell).hasClass("number")){
+function checkNumberSurrByDblClick(cell) {
+    if ($(cell).hasClass("number")) {
         var y = parseInt($(cell).attr("data-y")),
             x = parseInt($(cell).attr("data-x")),
             flagCount = 0,
@@ -228,64 +222,14 @@ function checkNumberSurrByDblClick(cell){
                 flagCount++;
             }
         }
-        if (flagCount == $(cell).data("mined")){
-            revealBlankCellSurrounding(cell);
+        if (flagCount == $(cell).data("mined")) {
+            revealCellSurrounding(cell);
         }
-
     }
 }
 
-function updateTimer(){
-    setInterval(function(){
+function updateTimer() {
+    setInterval(function () {
         $(".timer span").html(time++);
     }, 1000);
-}
-
-
-
-
-
-
-function revealAll() {
-    var cells = $(".cell");
-    for (var i = 0; i < cells.length; i++) {
-        revealCell(cells[i]);
-    }
-}
-
-function revealCell(cell) {
-    switch ($(cell).data("mined")) {
-        case -1:
-            $(cell).addClass("mine").removeClass("unrevealed");
-            break;
-        case 0:
-            $(cell).addClass("blank").removeClass("unrevealed");
-            break;
-        case 1:
-            $(cell).addClass("number one").removeClass("unrevealed");
-            break;
-        case 2:
-            $(cell).addClass("number two").removeClass("unrevealed");
-            break;
-        case 3:
-            $(cell).addClass("number three").removeClass("unrevealed");
-            break;
-        case 4:
-            $(cell).addClass("number four").removeClass("unrevealed");
-            break;
-        case 5:
-            $(cell).addClass("number five").removeClass("unrevealed");
-            break;
-        case 6:
-            $(cell).addClass("number six").removeClass("unrevealed");
-            break;
-        case 7:
-            $(cell).addClass("number seven").removeClass("unrevealed");
-            break;
-        case 8:
-            $(cell).addClass("number eight").removeClass("unrevealed");
-            break;
-        default:
-            break;
-    }
 }
