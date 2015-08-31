@@ -1,8 +1,7 @@
 /*TODO
  * TODO interface (restart game/difficulties/other)
  * TODO game difficulties
- * TODO redo winning/losing
- * TODO styles*/
+ * TODO redo winning/losing*/
 
 
 // Global variables
@@ -21,12 +20,12 @@ $(document).ready(function () {
 function init() {
     generateBoard(xSize, ySize);
     refreshFlagCount();
-    updateTimer();
 }
 
 function renderBoard() {
     minedCells = seedMines(xSize, ySize, minesCount, this);
     renderNumbers();
+    updateTimer();
     $(".cell").unbind("click", renderBoard);
 }
 

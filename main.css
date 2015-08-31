@@ -1,18 +1,19 @@
 body {
     margin: 0;
+    background: url("img/background.png");
 }
 
 .header {
     margin: 30px auto;
     text-align: center;
-    font-size: 25px;
+    font-size: 35px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .info-panel{
     margin: 20px auto;
     text-align: center;
-
+    font-size: 20px;
 }
 
 .timer{
@@ -37,27 +38,43 @@ body {
     margin: 0;
     width: 18px;
     height: 18px;
-    border: 1px outset grey;
     display: inline-block;
 }
 
-/*.cell:hover {*/
-    /*background-color: lightblue;*/
-/*}*/
-
 .cell:active {
-    background-color: lightslategrey;
+    background: #C2FFC2;
+    border: 1px inset #1c5513;
 }
-.unrevealed{background-color: lightgrey;}
-.blank{background-color: white;}
-.mine{background: url(img/minesweeper_sprite.png) 36px 18px;}
-.flag{background: url(img/minesweeper_sprite.png) 18px 18px;}
-.number{background: url(img/minesweeper_sprite.png)}
-.one{background-position:  162px 0;}
-.two{background-position:  144px 0;}
-.three{background-position: 126px 0;}
-.four{background-position: 108px 0;}
-.five{background-position: 90px 0;}
-.six{background-position: 72px 0;}
-.seven{background-position: 54px 0;}
-.eight{background-position: 36px 0;}
+
+.unrevealed {
+    background: linear-gradient(+135deg, #8cc980 0%, #59b74b 20%, #58ae5f 60%,#3c8d42 100%);
+    border: 1px outset #1c5513;
+}
+
+.blank {
+    background: #C2FFC2;
+    border: 1px inset #1c5513;
+}
+
+.mine {
+    background: url(img/minesweeper_sprite.png) 36px 18px, #C2FFC2;;
+    border: 1px inset #1c5513;
+}
+
+.flag {
+    background: url(img/minesweeper_sprite.png) 18px 18px,
+        linear-gradient(+135deg, #8cc980 0%, #59b74b 20%, #58ae5f 60%,#3c8d42 100%);
+}
+
+.number {
+    background: url(img/minesweeper_sprite.png), #C2FFC2;
+    border: 1px inset #1c5513;
+}
+.one{background-position:  144px 0;}
+.two{background-position:  126px 0;}
+.three{background-position: 108px 0;}
+.four{background-position: 90px 0;}
+.five{background-position: 72px 0;}
+.six{background-position: 54px 0;}
+.seven{background-position: 36px 0;}
+.eight{background-position: 18px 0;}
