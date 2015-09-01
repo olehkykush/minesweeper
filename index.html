@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Minesweeper</title>
     <link href="main.css" rel="stylesheet" type="text/css">
+    <script src="./jquery/jquery.min.js"></script>
+    <script src="script.js"></script>
 </head>
 <body>
     <h1 class="header">Minesweeper</h1>
@@ -12,8 +14,24 @@
         <div class="mines-counter">Mines: <span></span></div>
     </div>
     <div class="minesweeper"></div>
+    <div class="controls">
+        <label>Choose difficulty level:
+            <select onchange="selectHandler();">
+                <option>Beginner</option>
+                <option selected >Intermediate</option>
+                <option>Advanced</option>
+                <option>Custom</option>
+            </select>
+        </label>
+        <br/>
+        <br/>
+        <label>Rows: <input type="number" name="rows" value="16" disabled></label>
+        <label>Cols: <input type="number" name="cols" value="16" disabled></label>
+        <label>Mines: <input type="number" name="mines" value="40" disabled></label>
+        <br/>
+        <br/>
+        <button class="start-game" onclick="startNewGame();">Start new game</button>
+    </div>
 
-    <script src="./jquery/jquery.min.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>

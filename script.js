@@ -1,29 +1,26 @@
-/*TODO
- * TODO interface (restart game/difficulties/other)
- * TODO game difficulties
- * TODO redo winning/losing*/
-
-
-// Global variables
-var xSize = 16,
-    ySize = 16,
-    minesCount = 40,
-    flagCount = 40,
-    revealedCells = 0,
-    time = 0,
-    minedCells = [];
-
 $(document).ready(function () {
-    init();
+    init(16, 16, 40);
 });
 
-function init() {
-    generateBoard(xSize, ySize);
+function Minesweeper(xSize, ySize, minesCount) {
+    this.xSize = typeof xSize !== "undefined" ? xSize : 16;
+    this.ySize = typeof ySize !== "undefined" ? ySize : 16;
+    this.minesCount = typeof minesCount !== "undefined" ? minesCount : 40;
+    this.flagCount = minesCount;
+    this.revealedCells = 0;
+    this.timer = {};
+    this.time = 0;
+    this.minedCells = [];
+}
+
+function init(xSize, ySize, minesCount) {
+    ms = new Minesweeper(xSize, ySize, minesCount);
+    generateBoard(ms.xSize, ms.ySize);
     refreshFlagCount();
 }
 
 function renderBoard() {
-    minedCells = seedMines(xSize, ySize, minesCount, this);
+    ms.minedCells = seedMines(ms.xSize, ms.ySize, ms.minesCount, this);
     renderNumbers();
     updateTimer();
     $(".cell").unbind("click", renderBoard);
@@ -32,6 +29,7 @@ function renderBoard() {
 function generateBoard(xSize, ySize) {
     var board = document.createElement("div");
     $(board).addClass("board");
+    $(board).css( "width", xSize * 20);
     $(".minesweeper").append(board);
     for (var y = 0; y < ySize; y++) {
         for (var x = 0; x < xSize; x++) {
@@ -112,6 +110,7 @@ function revealCellByClick(cell) {
     }
     switch ($(cell).data("mined")) {
         case -1:
+            /*TODO losing*/
             $(cell).addClass("mine").removeClass("unrevealed");
             $(cell).css("background-color", "red");
             showMines();
@@ -121,46 +120,47 @@ function revealCellByClick(cell) {
         case 0:
             if ($(cell).hasClass("unrevealed")) {
                 $(cell).addClass("blank").removeClass("unrevealed");
-                revealedCells++;
+                ms.revealedCells++;
                 revealCellSurrounding(cell);
             }
             break;
         case 1:
             $(cell).addClass("number one").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         case 2:
             $(cell).addClass("number two").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         case 3:
             $(cell).addClass("number three").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         case 4:
             $(cell).addClass("number four").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         case 5:
             $(cell).addClass("number five").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         case 6:
             $(cell).addClass("number six").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         case 7:
             $(cell).addClass("number seven").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         case 8:
             $(cell).addClass("number eight").removeClass("unrevealed");
-            revealedCells++;
+            ms.revealedCells++;
             break;
         default:
             break;
     }
-    if ((xSize * ySize) - revealedCells == minesCount) {
+    if ((ms.xSize * ms.ySize) - ms.revealedCells == ms.minesCount) {
+        /*TODO winning*/
         alert("You won =)");
         location.reload();
     }
@@ -179,7 +179,7 @@ function revealCellSurrounding(cell) {
 }
 
 function showMines() {
-    minedCells.forEach(function (item) {
+    ms.minedCells.forEach(function (item) {
         $(item).addClass("mine").removeClass("unrevealed");
     })
 }
@@ -188,17 +188,17 @@ function toggleFlag(cell) {
     if ($(cell).hasClass("unrevealed")) {
         if ($(cell).hasClass("flag")) {
             $(cell).toggleClass("flag", false);
-            flagCount++;
+            ms.flagCount++;
             refreshFlagCount()
         } else {
             $(cell).toggleClass("flag", true);
-            flagCount--;
+            ms.flagCount--;
             refreshFlagCount()
         }
     }
 }
 function refreshFlagCount() {
-    $(".mines-counter span").html(flagCount);
+    $(".mines-counter span").html(ms.flagCount);
 }
 
 function checkNumberSurrByDblClick(cell) {
@@ -224,11 +224,59 @@ function checkNumberSurrByDblClick(cell) {
         if (flagCount == $(cell).data("mined")) {
             revealCellSurrounding(cell);
         }
+        else{
+            /*TODO dblclick on number highlights possible mine cells*/
+        }
     }
 }
 
 function updateTimer() {
-    setInterval(function () {
-        $(".timer span").html(time++);
+    ms.timer = setInterval(function () {
+        $(".timer span").html(ms.time++);
     }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(ms.timer);
+    $(".timer span").html("0");
+}
+
+function selectHandler(){
+        var value = $("select option:selected").text(),
+            rows = $("input[name = 'rows']"),
+            cols = $("input[name = 'cols']"),
+            mines = $("input[name = 'mines']");
+
+        switch (value){
+            case "Beginner":
+                rows.val(9).attr("disabled", true);
+                cols.val(9).attr("disabled", true);
+                mines.val(10).attr("disabled", true);
+                break;
+            case "Intermediate":
+                rows.val(16).attr("disabled", true);
+                cols.val(16).attr("disabled", true);
+                mines.val(40).attr("disabled", true);
+                break;
+            case "Advanced":
+                rows.val(30).attr("disabled", true);
+                cols.val(16).attr("disabled", true);
+                mines.val(99).attr("disabled", true);
+                break;
+            case "Custom":
+                rows.attr("disabled", false);
+                cols.attr("disabled", false);
+                mines.attr("disabled", false);
+                break;
+        }
+}
+
+function startNewGame() {
+    $(".board").remove();
+    stopTimer();
+    ms = {};
+    var rowsNumber = parseInt($("input[name = 'rows']").val()),
+        colsNumber = parseInt($("input[name = 'cols']").val()),
+        minesNumber = parseInt($("input[name = 'mines']").val());
+    init(rowsNumber, colsNumber, minesNumber);
 }
