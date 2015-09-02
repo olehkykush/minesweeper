@@ -26,6 +26,10 @@ body {
     margin: 0 50px;
 }
 
+.board{
+    background: #C2FFC2;
+}
+
 .controls{
     margin: 40px auto;
     text-align: center;

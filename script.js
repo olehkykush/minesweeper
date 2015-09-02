@@ -221,7 +221,12 @@ function checkNumberSurrByDblClick(cell) {
             revealCellSurrounding(cell);
         }
         else{
-            /*TODO dblclick on number highlights possible mine cells*/
+            surrounding.forEach(function(item){
+                if ($(item).hasClass("unrevealed")){
+                    $(item).fadeToggle("fast").fadeToggle("fast").
+                        fadeToggle("fast").fadeToggle("fast");
+                }
+            });
         }
     }
 }
