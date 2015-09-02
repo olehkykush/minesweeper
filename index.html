@@ -25,13 +25,18 @@
         </label>
         <br/>
         <br/>
-        <label>Rows: <input type="number" name="rows" value="16" disabled></label>
-        <label>Cols: <input type="number" name="cols" value="16" disabled></label>
-        <label>Mines: <input type="number" name="mines" value="40" disabled></label>
+        <label>Rows: <input type="number" name="rows" min="2" value="16" disabled></label>
+        <label>Cols: <input type="number" name="cols" min="2" value="16" disabled></label>
+        <label>Mines: <input type="number" name="mines" min="1" value="40" disabled></label>
         <br/>
         <br/>
-        <button class="start-game" onclick="startNewGame();">Start new game</button>
+        <button class="start-game-button" onclick="startNewGame();">Start new game</button>
     </div>
-
+    <div class="massage-overlay">
+        <div class="massage">
+            <h1></h1>
+            <h2></h2>
+        </div>
+    </div>
 </body>
 </html>

@@ -110,12 +110,10 @@ function revealCellByClick(cell) {
     }
     switch ($(cell).data("mined")) {
         case -1:
-            /*TODO losing*/
             $(cell).addClass("mine").removeClass("unrevealed");
             $(cell).css("background-color", "red");
             showMines();
-            alert("You lost =(");
-            location.reload();
+            overlay("lose");
             break;
         case 0:
             if ($(cell).hasClass("unrevealed")) {
@@ -160,9 +158,7 @@ function revealCellByClick(cell) {
             break;
     }
     if ((ms.xSize * ms.ySize) - ms.revealedCells == ms.minesCount) {
-        /*TODO winning*/
-        alert("You won =)");
-        location.reload();
+        overlay("win");
     }
 }
 
@@ -238,6 +234,9 @@ function updateTimer() {
 
 function stopTimer() {
     clearInterval(ms.timer);
+}
+
+function clearTimer() {
     $(".timer span").html("0");
 }
 
@@ -274,9 +273,32 @@ function selectHandler(){
 function startNewGame() {
     $(".board").remove();
     stopTimer();
+    clearTimer();
     ms = {};
     var rowsNumber = parseInt($("input[name = 'rows']").val()),
         colsNumber = parseInt($("input[name = 'cols']").val()),
         minesNumber = parseInt($("input[name = 'mines']").val());
     init(rowsNumber, colsNumber, minesNumber);
+}
+
+function overlay(state) {
+    $(".cell").off();
+    stopTimer();
+    if (state == "lose"){
+        $(".massage-overlay h1").html("Game over!");
+        $(".massage-overlay h2").html("You lost");
+    }
+    if (state == "win"){
+        $(".massage-overlay h1").html("Congratulations!");
+        $(".massage-overlay h2").html("You win with time: " + ms.time);
+    }
+    var overlay = $(".massage-overlay");
+    overlay.click(function(e) {
+        var clicked = $(e.target);
+        if (clicked.is('.massage')) {
+        } else {
+            $('.massage-overlay').fadeOut("fast");
+        }
+    });
+    overlay.fadeIn("fast");
 }
