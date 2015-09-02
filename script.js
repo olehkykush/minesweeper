@@ -276,33 +276,43 @@ function selectHandler(){
 }
 
 function startNewGame() {
+    var rowsNumber = parseInt($("input[name = 'rows']").val()),
+        colsNumber = parseInt($("input[name = 'cols']").val()),
+        minesNumber = parseInt($("input[name = 'mines']").val());
+    if ((rowsNumber < 2) || (colsNumber < 2) || (minesNumber < 2)){
+        alert("Cols, rows and mines number must be greater than 2");
+        return;
+    }
+    if (rowsNumber*colsNumber <= minesNumber){
+        alert("There must be more cells than mines");
+        return;
+    }
     $(".board").remove();
     stopTimer();
     clearTimer();
     ms = {};
-    var rowsNumber = parseInt($("input[name = 'rows']").val()),
-        colsNumber = parseInt($("input[name = 'cols']").val()),
-        minesNumber = parseInt($("input[name = 'mines']").val());
     init(rowsNumber, colsNumber, minesNumber);
 }
 
 function overlay(state) {
+    var overlay = $(".massage-overlay");
     $(".cell").off();
     stopTimer();
     if (state == "lose"){
         $(".massage-overlay h1").html("Game over!");
         $(".massage-overlay h2").html("You lost");
+        $(".massage").css("background", "#FFC3C3");
     }
     if (state == "win"){
         $(".massage-overlay h1").html("Congratulations!");
-        $(".massage-overlay h2").html("You win with time: " + ms.time);
+        $(".massage-overlay h2").html("You win. Your time is: " + ms.time);
+        $(".massage").css("background", "#C2FFC2");
     }
-    var overlay = $(".massage-overlay");
     overlay.click(function(e) {
         var clicked = $(e.target);
         if (clicked.is('.massage')) {
         } else {
-            $('.massage-overlay').fadeOut("fast");
+            overlay.fadeOut("fast");
         }
     });
     overlay.fadeIn("fast");
